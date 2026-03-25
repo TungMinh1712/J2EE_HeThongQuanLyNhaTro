@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sửa phòng</title>
+</head>
+<body>
+
+<h2>Sửa phòng</h2>
+
+<form action="/phong/save" method="post" enctype="multipart/form-data">
+
+    <!-- giữ ID -->
+    <input type="hidden" name="id" th:value="${phong.id}"/>
+
+    Mã phòng:
+    <input name="maPhong" th:value="${phong.maPhong}"><br><br>
+
+    Tên phòng:
+    <input name="tenPhong" th:value="${phong.tenPhong}"><br><br>
+
+    Giá:
+    <input name="gia" th:value="${phong.gia}"><br><br>
+
+    Diện tích:
+    <input name="dienTich" th:value="${phong.dienTich}"><br><br>
+
+    Số lượng:
+    <input name="soLuong" th:value="${phong.soLuong}"><br><br>
+
+    Trạng thái:
+    <select name="trangThai">
+        <option th:each="t : ${trangThais}"
+                th:value="${t}"
+                th:text="${t}"
+                th:selected="${t == phong.trangThai}">
+        </option>
+    </select><br><br>
+
+    Ảnh hiện tại:
+    <br>
+    <img th:src="@{'/uploads/' + ${phong.anh}}" width="120"><br><br>
+
+    Chọn ảnh mới:
+    <input type="file" name="file"><br><br>
+
+    <button type="submit">✔ Cập nhật</button>
+</form>
+
+<br>
+<a href="/phong">⬅ Quay lại</a>
+
+</body>
+</html>
