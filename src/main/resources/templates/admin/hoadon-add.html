@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quản lý hóa đơn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-4">
+    <h2 class="text-center text-primary mb-4">QUẢN LÝ HÓA ĐƠN</h2>
+
+    <a href="/hoadon/create" class="btn btn-success mb-3">+ Tạo hóa đơn</a>
+
+    <table class="table table-bordered table-hover shadow">
+        <thead class="table-dark">
+        <tr>
+            <th>Mã</th>
+            <th>Phòng</th>
+            <th>Tháng</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="hd : ${list}">
+            <td th:text="${hd.maHoaDon}"></td>
+            <td th:text="${hd.phong}"></td>
+            <td th:text="${hd.thang + '/' + hd.nam}"></td>
+            <td th:text="${hd.tongTien}"></td>
+
+            <td>
+                <span class="badge bg-success" th:if="${hd.trangThai == 'Đã thanh toán'}">Đã thanh toán</span>
+                <span class="badge bg-danger" th:if="${hd.trangThai == 'Chưa thanh toán'}">Chưa thanh toán</span>
+            </td>
+
+            <td>
+                <a th:href="@{'/hoadon/detail/' + ${hd.id}}" class="btn btn-info btn-sm">Xem</a>
+                <a th:href="@{'/hoadon/edit/' + ${hd.id}}" class="btn btn-warning btn-sm">Sửa</a>
+                <a th:href="@{'/hoadon/delete/' + ${hd.id}}" class="btn btn-danger btn-sm">Xóa</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
