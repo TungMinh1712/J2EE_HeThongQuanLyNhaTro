@@ -1,49 +1,199 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Thanh toán</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán hóa đơn | Payment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --pay-bg: #f3f4f9;
+            --pay-primary: #0061ff;
+            --pay-secondary: #60efff;
+            --pay-dark: #1e293b;
+        }
+
+        body {
+            background: var(--pay-bg);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--pay-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .payment-card {
+            background: white;
+            border-radius: 35px;
+            padding: 40px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        /* Phần Header Hóa đơn */
+        .info-pill {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 25px;
+        }
+
+        .fee-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: #64748b;
+        }
+
+        .fee-item b { color: var(--pay-dark); }
+
+        /* Tổng tiền cực nổi bật */
+        .total-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .total-label { font-size: 0.8rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .total-amount { font-size: 2.5rem; color: #ef4444; font-weight: 800; letter-spacing: -1.5px; }
+
+        /* QR Section */
+        .qr-wrapper {
+            position: relative;
+            background: white;
+            padding: 20px;
+            border-radius: 25px;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(0, 97, 255, 0.1);
+            border: 2px solid #f1f5f9;
+            margin-bottom: 20px;
+        }
+
+        .qr-wrapper::after {
+            content: "";
+            position: absolute;
+            inset: -5px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, var(--pay-primary), var(--pay-secondary));
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .qr-img {
+            max-width: 220px;
+            border-radius: 15px;
+        }
+
+        /* Nút xác nhận kiểu App ngân hàng */
+        .btn-confirm {
+            background: var(--pay-dark);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 30px rgba(30, 41, 59, 0.2);
+        }
+
+        .btn-confirm:hover {
+            background: #000;
+            transform: translateY(-3px);
+            color: white;
+        }
+
+        .bank-info-box {
+            background: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+    </style>
 </head>
+<body>
 
-<body class="bg-light">
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="payment-card shadow">
+                <div class="text-center mb-4">
+                    <h4 class="fw-800 mb-1">Thanh toán hóa đơn</h4>
+                    <p class="text-muted small">Quét mã QR để hoàn tất giao dịch</p>
+                </div>
 
-<div class="container mt-4">
+                <div class="info-pill d-flex justify-content-around text-center">
+                    <div>
+                        <div class="small text-muted">Số phòng</div>
+                        <b class="fs-5" th:text="${hd.phong}"></b>
+                    </div>
+                    <div style="width: 1px; background: #cbd5e1;"></div>
+                    <div>
+                        <div class="small text-muted">Kỳ hạn</div>
+                        <b class="fs-5" th:text="${hd.thang} + '/' + ${hd.nam}"></b>
+                    </div>
+                </div>
 
-    <div class="card shadow p-4">
-        <h3 class="text-center text-success">THANH TOÁN</h3>
+                <div class="px-2">
+                    <div class="fee-item">
+                        <span>Tiền thuê phòng</span>
+                        <b th:text="${#numbers.formatDecimal(hd.tienPhong, 0, 'COMMA', 0, 'POINT')} + ' đ'"></b>
+                    </div>
+                    <div class="fee-item">
+                        <span>Tiền điện</span>
+                        <b th:text="${#numbers.formatDecimal(hd.tienDien, 0, 'COMMA', 0, 'POINT')} + ' đ'"></b>
+                    </div>
+                    <div class="fee-item">
+                        <span>Tiền nước</span>
+                        <b th:text="${#numbers.formatDecimal(hd.tienNuoc, 0, 'COMMA', 0, 'POINT')} + ' đ'"></b>
+                    </div>
+                    <div class="fee-item">
+                        <span>Dịch vụ khác</span>
+                        <b th:text="${#numbers.formatDecimal(hd.tienDichVu, 0, 'COMMA', 0, 'POINT')} + ' đ'"></b>
+                    </div>
+                </div>
 
-        <p><b>Phòng:</b> <span th:text="${hd.phong}"></span></p>
-        <p><b>Tháng:</b> <span th:text="${hd.thang}"></span></p>
+                <div class="total-section text-center">
+                    <div class="total-label">Cần thanh toán</div>
+                    <div class="total-amount" th:text="${#numbers.formatDecimal(hd.tongTien, 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
+                </div>
 
-        <hr>
+                <div class="text-center">
+                    <div class="qr-wrapper">
+                        <img th:src="@{'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=STK:' + ${hd.stk} + '|BANK:' + ${hd.nganHang} + '|AMOUNT:' + ${hd.tongTien} + '|DESC:' + ${hd.noiDungCK}}"
+                             class="qr-img" alt="Mã QR" />
+                    </div>
 
-        <p>Tiền phòng: <span th:text="${hd.tienPhong}"></span></p>
-        <p>Tiền điện: <span th:text="${hd.tienDien}"></span></p>
-        <p>Tiền nước: <span th:text="${hd.tienNuoc}"></span></p>
-        <p>Tiền dịch vụ: <span th:text="${hd.tienDichVu}"></span></p>
+                    <div class="bank-info-box text-start mb-4">
+                        <div class="small"><i class="bi bi-info-circle-fill text-warning me-2"></i><b>Nội dung chuyển khoản:</b></div>
+                        <div class="fw-bold text-primary mt-1 fs-5" th:text="${hd.noiDungCK}"></div>
+                    </div>
+                </div>
 
-        <h4 class="text-danger">Tổng: <span th:text="${hd.tongTien}"></span></h4>
+                <div class="d-grid gap-3">
+                    <a th:href="@{/hoadon/user/pay/{id}(id=${hd.id})}" class="btn btn-confirm">
+                        <i class="bi bi-shield-check me-2"></i> Xác nhận đã thanh toán
+                    </a>
+                    <a href="/hoadon/user" class="btn btn-link text-muted text-decoration-none small text-center">
+                        <i class="bi bi-chevron-left"></i> Quay lại danh sách
+                    </a>
+                </div>
+            </div>
 
-        <hr>
-
-        <h5>Chuyển khoản</h5>
-        <p><b>STK:</b> 01234</p>
-        <p><b>Ngân hàng:</b> ABC</p>
-        <p><b>Nội dung:</b> <span th:text="'Phòng ' + ${hd.phong} + ' - tháng ' + ${hd.thang}"></span></p>
-
-        <div class="text-center mt-3">
-            <img th:src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Phong ' + ${hd.phong}"
-                 class="img-thumbnail"/>
+            <p class="text-center mt-4 text-muted small">
+                <i class="bi bi-lock-fill"></i> Thanh toán an toàn qua cổng VietQR
+            </p>
         </div>
-
-        <div class="text-center mt-3">
-            <span class="badge bg-warning" th:if="${hd.trangThai=='Chưa thanh toán'}">Chưa thanh toán</span>
-            <span class="badge bg-success" th:if="${hd.trangThai=='Đã thanh toán'}">Đã thanh toán</span>
-        </div>
-
     </div>
-
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

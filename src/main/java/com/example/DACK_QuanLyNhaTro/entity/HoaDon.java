@@ -1,38 +1,31 @@
-package entity;
+package com.example.DACK_QuanLyNhaTro.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "hoadon")
+@Data
 public class HoaDon {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tenNguoiThue;
-    private double soTien;
-    private String trangThai;
+    private String phong;
+    private Integer thang;
+    private Integer nam;
 
-    private LocalDate ngayTao;
-    private LocalDate ngayThanhToan;
+    private Double tienPhong = 0.0;
+    private Double tienDien = 0.0;
+    private Double tienNuoc = 0.0;
+    private Double tienDichVu = 0.0;
+    private Double tongTien = 0.0;
 
-    // Getter & Setter
-    public Long getId() { return id; }
+    // Thống nhất dùng mã: CHUA_THANH_TOAN hoặc DA_THANH_TOAN
+    private String trangThai = "CHUA_THANH_TOAN";
 
-    public String getTenNguoiThue() { return tenNguoiThue; }
-    public void setTenNguoiThue(String tenNguoiThue) { this.tenNguoiThue = tenNguoiThue; }
-
-    public double getSoTien() { return soTien; }
-    public void setSoTien(double soTien) { this.soTien = soTien; }
-
-    public String getTrangThai() { return trangThai; }
-    public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
-
-    public LocalDate getNgayTao() { return ngayTao; }
-    public void setNgayTao(LocalDate ngayTao) { this.ngayTao = ngayTao; }
-
-    public LocalDate getNgayThanhToan() { return ngayThanhToan; }
-    public void setNgayThanhToan(LocalDate ngayThanhToan) { this.ngayThanhToan = ngayThanhToan; }
+    private String stk = "0123456789";
+    private String nganHang = "MB Bank";
+    private String noiDungCK;
+    private LocalDate ngayTao = LocalDate.now();
 }
