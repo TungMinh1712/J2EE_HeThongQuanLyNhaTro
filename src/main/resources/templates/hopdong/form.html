@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"></title>
+</head>
+<body>
+    <h1 th:text="${title}"></h1>
+    <form th:action="${action}" th:object="${hopDong}" method="post">
+        <div>
+            <label for="maHopDong">Mã hợp đồng</label>
+            <input type="text" th:field="*{maHopDong}" id="maHopDong"/>
+        </div>
+        <div>
+            <label for="khachThue">Khách thuê</label>
+            <input type="text" th:field="*{khachThue.tenKhachThue}" id="khachThue"/>
+        </div>
+        <div>
+            <label for="phong">Phòng</label>
+            <input type="text" th:field="*{phong.tenPhong}" id="phong"/>
+        </div>
+        <div>
+            <label for="ngayBatDau">Ngày bắt đầu</label>
+            <input type="date" th:field="*{ngayBatDau}" id="ngayBatDau"/>
+        </div>
+        <div>
+            <label for="ngayKetThuc">Ngày kết thúc</label>
+            <input type="date" th:field="*{ngayKetThuc}" id="ngayKetThuc"/>
+        </div>
+        <div>
+            <label for="giaThue">Giá thuê</label>
+            <input type="number" th:field="*{giaThue}" id="giaThue"/>
+        </div>
+        <div>
+            <label for="trangThai">Trạng thái</label>
+            <select th:field="*{trangThai}">
+                <option th:value="HIEU_LUC">Hiệu lực</option>
+                <option th:value="HET_HAN">Hết hạn</option>
+                <option th:value="DA_HUY">Đã hủy</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit">Lưu</button>
+        </div>
+    </form>
+    <div th:if="${error}">
+        <p style="color: red;" th:text="${error}"></p>
+    </div>
+</body>
+</html>
