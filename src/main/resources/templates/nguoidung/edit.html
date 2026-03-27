@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{layout :: head('Cập nhật người dùng')}"></head>
+<body>
+
+<div class="app-shell">
+  <aside th:replace="~{layout :: sidebar('nguoidung')}"></aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-heading">
+        <h1>Cập nhật người dùng</h1>
+        <p>Chỉnh sửa thông tin tài khoản trong hệ thống</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <form th:action="@{'/nguoi-dung/update/' + ${nguoiDung.id}}" th:object="${nguoiDung}" method="post" class="form">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="hoTen">Họ tên</label>
+                <input type="text" id="hoTen" th:field="*{hoTen}" required>
+              </div>
+
+              <div class="form-group">
+                <label for="tenDangNhap">Tên đăng nhập</label>
+                <input type="text" id="tenDangNhap" th:field="*{tenDangNhap}" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="matKhau">Mật khẩu</label>
+                <input type="password" id="matKhau" th:field="*{matKhau}" required>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" th:field="*{email}">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="soDienThoai">Số điện thoại</label>
+                <input type="text" id="soDienThoai" th:field="*{soDienThoai}">
+              </div>
+
+              <div class="form-group">
+                <label for="vaiTro">Vai trò</label>
+                <select id="vaiTro" th:field="*{vaiTro}">
+                  <option value="ADMIN">ADMIN</option>
+                  <option value="USER">USER</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="trangThaiHoatDong">Trạng thái hoạt động</label>
+              <select id="trangThaiHoatDong" th:field="*{trangThaiHoatDong}">
+                <option th:value="true">Hoạt động</option>
+                <option th:value="false">Ngừng hoạt động</option>
+              </select>
+            </div>
+
+            <div class="form-action">
+              <button type="submit" class="btn btn-primary">Cập nhật</button>
+              <a th:href="@{/nguoi-dung}" class="btn btn-secondary">Quay lại</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<th:block th:replace="~{layout :: scripts}"></th:block>
+
+</body>
+</html>

@@ -1,35 +1,92 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Danh sách hợp đồng</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{layout :: head('Danh sách hợp đồng')}"></head>
 <body>
-    <h1>Danh sách hợp đồng</h1>
-    <table>
-        <tr>
-            <th>Mã hợp đồng</th>
-            <th>Khách thuê</th>
-            <th>Phòng</th>
-            <th>Ngày bắt đầu</th>
-            <th>Ngày kết thúc</th>
-            <th>Giá thuê</th>
-            <th>Trang thái</th>
-            <th>Hành động</th>
-        </tr>
-        <tr th:each="hopDong : ${dsHopDong}">
-            <td th:text="${hopDong.maHopDong}"></td>
-            <td th:text="${hopDong.khachThue.tenKhachThue}"></td>
-            <td th:text="${hopDong.phong.tenPhong}"></td>
-            <td th:text="${hopDong.ngayBatDau}"></td>
-            <td th:text="${hopDong.ngayKetThuc}"></td>
-            <td th:text="${hopDong.giaThue}"></td>
-            <td th:text="${hopDong.trangThai}"></td>
-            <td>
-                <a th:href="@{/hop-dong/sua/{id}(id=${hopDong.id})}">Sửa</a> |
-                <a th:href="@{/hop-dong/xoa/{id}(id=${hopDong.id})}">Xóa</a>
-            </td>
-        </tr>
-    </table>
-    <a href="/hop-dong/them">Thêm hợp đồng mới</a>
+
+<div class="app-shell">
+    <aside th:replace="~{layout :: sidebar('hopdong')}"></aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div class="page-heading">
+                <h1>Danh sách hợp đồng</h1>
+                <p>Quản lý hợp đồng thuê phòng trong hệ thống</p>
+            </div>
+            <div class="topbar-actions">
+                <a th:href="@{/hop-dong/add}" class="btn btn-primary">+ Thêm hợp đồng</a>
+            </div>
+        </div>
+
+        <div class="container">
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-wrapper">
+                        <div class="table-scroll">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Phòng</th>
+                                    <th>Khách thuê</th>
+                                    <th>Ngày bắt đầu</th>
+                                    <th>Ngày kết thúc</th>
+                                    <th>Giá thuê lúc ký</th>
+                                    <th>Tiền cọc</th>
+                                    <th>Trạng thái</th>
+                                    <th>Điều khoản</th>
+                                    <th>Hành động</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="hd : ${danhSachHopDong}">
+                                    <td th:text="${hd.id}"></td>
+                                    <td th:text="${hd.phong != null ? hd.phong.tenPhong : ''}"></td>
+                                    <td th:text="${hd.khachThue != null ? hd.khachThue.hoTen : ''}"></td>
+                                    <td th:text="${hd.ngayBatDau}"></td>
+                                    <td th:text="${hd.ngayKetThuc}"></td>
+                                    <td th:text="${#numbers.formatDecimal(hd.giaThueLucKy, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                    <td th:text="${#numbers.formatDecimal(hd.tienCoc, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                    <td>
+                                        <span th:if="${hd.trangThai.name() == 'CON_HIEU_LUC'}" class="badge badge-success">Còn hiệu lực</span>
+                                        <span th:if="${hd.trangThai.name() == 'HET_HAN'}" class="badge badge-warning">Hết hạn</span>
+                                        <span th:if="${hd.trangThai.name() == 'DA_HUY'}" class="badge badge-danger">Đã hủy</span>
+                                    </td>
+                                    <td th:text="${hd.dieuKhoan}"></td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <a th:href="@{'/hop-dong/edit/' + ${hd.id}}" class="btn btn-sm btn-outline">Sửa</a>
+                                            <a href="#"
+                                               class="btn btn-sm btn-danger"
+                                               th:attr="data-delete-url=@{'/hop-dong/delete/' + ${hd.id}}">
+                                                Xóa
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr th:if="${#lists.isEmpty(danhSachHopDong)}">
+                                    <td colspan="10">
+                                        <div class="empty-state">
+                                            <h3>Chưa có hợp đồng nào</h3>
+                                            <p>Hãy thêm hợp đồng đầu tiên để bắt đầu quản lý.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div th:replace="~{layout :: deleteModal}"></div>
+<th:block th:replace="~{layout :: scripts}"></th:block>
+
 </body>
 </html>

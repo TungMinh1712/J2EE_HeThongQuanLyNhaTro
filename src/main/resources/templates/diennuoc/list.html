@@ -1,54 +1,93 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Quản lý điện nước - dịch vụ</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{layout :: head('Danh sách chỉ số điện nước')}"></head>
 <body>
-<h2>Quản lý điện nước - dịch vụ</h2>
 
-<a href="/dien-nuoc/them">Thêm mới</a>
+<div class="app-shell">
+    <aside th:replace="~{layout :: sidebar('diennuoc')}"></aside>
 
-<table border="1" cellpadding="8" cellspacing="0" style="margin-top:10px;">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Phòng</th>
-        <th>Tháng</th>
-        <th>Năm</th>
-        <th>Điện cũ</th>
-        <th>Điện mới</th>
-        <th>Nước cũ</th>
-        <th>Nước mới</th>
-        <th>Tổng điện</th>
-        <th>Tổng nước</th>
-        <th>Tổng DV</th>
-        <th>Tổng tiền</th>
-        <th>Hành động</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="item : ${dsDienNuoc}">
-        <td th:text="${item.id}"></td>
-        <td th:text="${item.phong != null ? item.phong.tenPhong : ''}"></td>
-        <td th:text="${item.thang}"></td>
-        <td th:text="${item.nam}"></td>
-        <td th:text="${item.chiSoDienCu}"></td>
-        <td th:text="${item.chiSoDienMoi}"></td>
-        <td th:text="${item.chiSoNuocCu}"></td>
-        <td th:text="${item.chiSoNuocMoi}"></td>
-        <td th:text="${item.tongTienDien}"></td>
-        <td th:text="${item.tongTienNuoc}"></td>
-        <td th:text="${item.tongTienDichVu}"></td>
-        <td th:text="${item.tongTien}"></td>
-        <td>
-            <a th:href="@{/dien-nuoc/sua/{id}(id=${item.id})}">Sửa</a>
-            |
-            <a th:href="@{/dien-nuoc/xoa/{id}(id=${item.id})}"
-               onclick="return confirm('Bạn có chắc muốn xóa không?')">Xóa</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <main class="main">
+        <div class="topbar">
+            <div class="page-heading">
+                <h1>Danh sách chỉ số điện nước</h1>
+                <p>Quản lý chỉ số điện và nước theo từng phòng</p>
+            </div>
+            <div class="topbar-actions">
+                <a th:href="@{/chi-so-dien-nuoc/add}" class="btn btn-primary">+ Thêm chỉ số</a>
+            </div>
+        </div>
+
+        <div class="container">
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-wrapper">
+                        <div class="table-scroll">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Phòng</th>
+                                    <th>Tháng năm</th>
+                                    <th>Loại dịch vụ</th>
+                                    <th>Chỉ số cũ</th>
+                                    <th>Chỉ số mới</th>
+                                    <th>Tiêu thụ</th>
+                                    <th>Đơn giá</th>
+                                    <th>Thành tiền</th>
+                                    <th>Ghi chú</th>
+                                    <th>Hành động</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="cs : ${danhSachChiSoDienNuoc}">
+                                    <td th:text="${cs.id}"></td>
+                                    <td th:text="${cs.phong != null ? cs.phong.tenPhong : ''}"></td>
+                                    <td th:text="${cs.thangNam}"></td>
+                                    <td>
+                                        <span th:if="${cs.loaiDichVu.name() == 'DIEN'}" class="badge badge-warning">Điện</span>
+                                        <span th:if="${cs.loaiDichVu.name() == 'NUOC'}" class="badge badge-primary">Nước</span>
+                                    </td>
+                                    <td th:text="${cs.chiSoCu}"></td>
+                                    <td th:text="${cs.chiSoMoi}"></td>
+                                    <td th:text="${cs.soLuongTieuThu}"></td>
+                                    <td th:text="${#numbers.formatDecimal(cs.donGia, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                    <td th:text="${#numbers.formatDecimal(cs.thanhTien, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                    <td th:text="${cs.ghiChu}"></td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <a th:href="@{'/chi-so-dien-nuoc/edit/' + ${cs.id}}" class="btn btn-sm btn-outline">Sửa</a>
+                                            <a href="#"
+                                               class="btn btn-sm btn-danger"
+                                               th:attr="data-delete-url=@{'/chi-so-dien-nuoc/delete/' + ${cs.id}}">
+                                                Xóa
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr th:if="${#lists.isEmpty(danhSachChiSoDienNuoc)}">
+                                    <td colspan="11">
+                                        <div class="empty-state">
+                                            <h3>Chưa có chỉ số điện nước nào</h3>
+                                            <p>Hãy thêm dữ liệu đầu tiên để bắt đầu quản lý.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div th:replace="~{layout :: deleteModal}"></div>
+<th:block th:replace="~{layout :: scripts}"></th:block>
+
 </body>
 </html>

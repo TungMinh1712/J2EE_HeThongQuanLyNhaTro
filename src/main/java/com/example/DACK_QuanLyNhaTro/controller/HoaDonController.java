@@ -1,83 +1,68 @@
 package com.example.DACK_QuanLyNhaTro.controller;
 
 import com.example.DACK_QuanLyNhaTro.entity.HoaDon;
-import com.example.DACK_QuanLyNhaTro.services.HoaDonService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import com.example.DACK_QuanLyNhaTro.service.HoaDonService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.math.BigDecimal;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/hoa-don")
+@RequiredArgsConstructor
 public class HoaDonController {
 
-    private final HoaDonService service;
-    public HoaDonController(HoaDonService service) { this.service = service; }
+    private final HoaDonService hoaDonService;
 
-    // ==========================================
-    // PHẦN DÀNH CHO ADMIN
-    // ==========================================
-
-    @GetMapping("/admin/hoadon")
-    public String adminList(Model model) {
-        model.addAttribute("list", service.getAll());
-        return "admin/hoadon-list";
+    @GetMapping
+    public List<HoaDon> layTatCa() {
+        return hoaDonService.layTatCa();
     }
 
-    @GetMapping("/admin/hoadon/add")
-    public String showAddForm(Model model) {
-        HoaDon hoadon = new HoaDon();
-        hoadon.setNam(2026);
-        model.addAttribute("hoadon", hoadon);
-        return "admin/hoadon-add";
+    @GetMapping("/{id}")
+    public HoaDon layTheoId(@PathVariable Long id) {
+        return hoaDonService.layTheoId(id);
     }
 
-    @PostMapping("/admin/hoadon/save")
-    public String saveHoaDon(@ModelAttribute("hoadon") HoaDon hoadon) {
-        service.save(hoadon);
-        return "redirect:/admin/hoadon";
+    @GetMapping("/phong/{phongId}")
+    public List<HoaDon> layTheoPhong(@PathVariable Long phongId) {
+        return hoaDonService.layTheoPhong(phongId);
     }
 
-    @GetMapping("/admin/hoadon/detail/{id}")
-    public String adminDetail(@PathVariable Long id, Model model) {
-        model.addAttribute("hd", service.findById(id));
-        return "admin/hoadon-detail";
+    @GetMapping("/hop-dong/{hopDongId}")
+    public List<HoaDon> layTheoHopDong(@PathVariable Long hopDongId) {
+        return hoaDonService.layTheoHopDong(hopDongId);
     }
 
-    @GetMapping("/admin/hoadon/delete/{id}")
-    public String deleteHoaDon(@PathVariable Long id) {
-        service.deleteById(id);
-        return "redirect:/admin/hoadon";
+    @GetMapping("/thang/{thangLap}")
+    public List<HoaDon> layTheoThangLap(@PathVariable String thangLap) {
+        return hoaDonService.layTheoThangLap(thangLap);
     }
 
-    @GetMapping("/admin/hoadon/update-status/{id}")
-    public String updateStatus(@PathVariable Long id) {
-        service.capNhatTrangThai(id);
-        return "redirect:/admin/hoadon";
+    @GetMapping("/trang-thai/{trangThai}")
+    public List<HoaDon> layTheoTrangThai(@PathVariable HoaDon.TrangThaiHoaDon trangThai) {
+        return hoaDonService.layTheoTrangThai(trangThai);
     }
 
-    // ==========================================
-    // PHẦN DÀNH CHO USER (NGƯỜI THUÊ)
-    // ==========================================
-
-    // 1. Danh sách hóa đơn cho User (URL: /hoadon/user)
-    @GetMapping("/hoadon/user")
-    public String userList(Model model) {
-        model.addAttribute("list", service.getAll());
-        return "user/hoadon-list";
+    @PostMapping
+    public HoaDon taoMoi(@RequestBody HoaDon hoaDon) {
+        return hoaDonService.taoMoi(hoaDon);
     }
 
-    // 2. Trang quét mã QR thanh toán (URL: /hoadon/user/payment/{id})
-    @GetMapping("/hoadon/user/payment/{id}")
-    public String userPayment(@PathVariable Long id, Model model) {
-        HoaDon hd = service.findById(id);
-        if (hd == null) return "redirect:/hoadon/user";
-        model.addAttribute("hd", hd);
-        return "user/hoadon-payment";
+    @PutMapping("/{id}")
+    public HoaDon capNhat(@PathVariable Long id, @RequestBody HoaDon hoaDon) {
+        return hoaDonService.capNhat(id, hoaDon);
     }
 
-    // 3. Xử lý khi User bấm "Xác nhận đã chuyển khoản" (URL: /hoadon/user/pay/{id})
-    @GetMapping("/hoadon/user/pay/{id}")
-    public String userConfirmPay(@PathVariable Long id) {
-        service.capNhatTrangThai(id);
-        return "redirect:/hoadon/user";
+    @PatchMapping("/{id}/thanh-toan")
+    public HoaDon capNhatThanhToan(@PathVariable Long id, @RequestParam BigDecimal soTienThanhToanThem) {
+        return hoaDonService.capNhatThanhToan(id, soTienThanhToanThem);
+    }
+
+    @DeleteMapping("/{id}")
+    public String xoa(@PathVariable Long id) {
+        hoaDonService.xoa(id);
+        return "Xóa hóa đơn thành công";
     }
 }

@@ -1,42 +1,92 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Danh sách phòng</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{layout :: head('Danh sách phòng')}"></head>
 <body>
 
-<h2>Danh sách phòng</h2>
+<div class="app-shell">
+    <aside th:replace="~{layout :: sidebar('phong')}"></aside>
 
-<a href="/phong/add">➕ Thêm phòng</a>
+    <main class="main">
+        <div class="topbar">
+            <div class="page-heading">
+                <h1>Danh sách phòng</h1>
+                <p>Quản lý thông tin phòng trọ trong hệ thống</p>
+            </div>
+            <div class="topbar-actions">
+                <a th:href="@{/phong/add}" class="btn btn-primary">+ Thêm phòng</a>
+            </div>
+        </div>
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>Mã</th>
-        <th>Tên</th>
-        <th>Giá</th>
-        <th>Trạng thái</th>
-        <th>Ảnh</th>
-        <th>Action</th>
-    </tr>
+        <div class="container">
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-    <tr th:each="p : ${list}">
-        <td th:text="${p.maPhong}"></td>
-        <td th:text="${p.tenPhong}"></td>
-        <td th:text="${p.gia}"></td>
-        <td th:text="${p.trangThai}"></td>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-wrapper">
+                        <div class="table-scroll">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Mã phòng</th>
+                                    <th>Tên phòng</th>
+                                    <th>Diện tích</th>
+                                    <th>Giá thuê</th>
+                                    <th>Tiền cọc</th>
+                                    <th>Số người tối đa</th>
+                                    <th>Trạng thái</th>
+                                    <th>Mô tả</th>
+                                    <th>Hành động</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="phongItem : ${danhSachPhong}">
+                                    <td th:text="${phongItem.id}"></td>
+                                    <td th:text="${phongItem.maPhong}"></td>
+                                    <td th:text="${phongItem.tenPhong}"></td>
+                                    <td th:text="${phongItem.dienTich} + ' m²'"></td>
+                                    <td th:text="${#numbers.formatDecimal(phongItem.giaThue, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                    <td th:text="${#numbers.formatDecimal(phongItem.tienCoc, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                    <td th:text="${phongItem.soNguoiToiDa}"></td>
+                                    <td>
+                                        <span th:if="${phongItem.trangThai.name() == 'CON_TRONG'}" class="badge badge-success">Còn trống</span>
+                                        <span th:if="${phongItem.trangThai.name() == 'DA_THUE'}" class="badge badge-primary">Đã thuê</span>
+                                        <span th:if="${phongItem.trangThai.name() == 'DANG_BAO_TRI'}" class="badge badge-warning">Đang bảo trì</span>
+                                    </td>
+                                    <td th:text="${phongItem.moTa}"></td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <a th:href="@{'/phong/edit/' + ${phongItem.id}}" class="btn btn-sm btn-outline">Sửa</a>
+                                            <a href="#"
+                                               class="btn btn-sm btn-danger"
+                                               th:attr="data-delete-url=@{'/phong/delete/' + ${phongItem.id}}">
+                                                Xóa
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
 
-        <td>
-            <img th:src="@{'/uploads/' + ${p.anh}}" width="100"/>
-        </td>
+                                <tr th:if="${#lists.isEmpty(danhSachPhong)}">
+                                    <td colspan="10">
+                                        <div class="empty-state">
+                                            <h3>Chưa có phòng nào</h3>
+                                            <p>Hãy thêm phòng đầu tiên để bắt đầu quản lý.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
 
-        <td>
-            <a th:href="@{'/phong/view/' + ${p.id}}">👁 Xem</a> |
-            <a th:href="@{'/phong/edit/' + ${p.id}}">✏️ Sửa</a> |
-            <a th:href="@{'/phong/delete/' + ${p.id}}"
-               onclick="return confirm('Xóa không?')">❌ Xóa</a>
-        </td>
-    </tr>
-</table>
+<div th:replace="~{layout :: deleteModal}"></div>
+<th:block th:replace="~{layout :: scripts}"></th:block>
 
 </body>
 </html>

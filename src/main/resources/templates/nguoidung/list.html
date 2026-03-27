@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{layout :: head('Danh sách người dùng')}"></head>
+<body>
+
+<div class="app-shell">
+  <aside th:replace="~{layout :: sidebar('nguoidung')}"></aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-heading">
+        <h1>Danh sách người dùng</h1>
+        <p>Quản lý tài khoản admin và user trong hệ thống</p>
+      </div>
+      <div class="topbar-actions">
+        <a th:href="@{/nguoi-dung/add}" class="btn btn-primary">+ Thêm người dùng</a>
+      </div>
+    </div>
+
+    <div class="container">
+      <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+      <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="table-wrapper">
+            <div class="table-scroll">
+              <table class="table">
+                <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Họ tên</th>
+                  <th>Tên đăng nhập</th>
+                  <th>Email</th>
+                  <th>Số điện thoại</th>
+                  <th>Vai trò</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="nd : ${danhSachNguoiDung}">
+                  <td th:text="${nd.id}"></td>
+                  <td th:text="${nd.hoTen}"></td>
+                  <td th:text="${nd.tenDangNhap}"></td>
+                  <td th:text="${nd.email}"></td>
+                  <td th:text="${nd.soDienThoai}"></td>
+                  <td>
+                    <span class="badge badge-primary" th:text="${nd.vaiTro}"></span>
+                  </td>
+                  <td>
+                    <span th:if="${nd.trangThaiHoatDong}" class="badge badge-success">Hoạt động</span>
+                    <span th:unless="${nd.trangThaiHoatDong}" class="badge badge-danger">Ngừng hoạt động</span>
+                  </td>
+                  <td>
+                    <div class="table-actions">
+                      <a th:href="@{'/nguoi-dung/edit/' + ${nd.id}}" class="btn btn-sm btn-outline">Sửa</a>
+                      <a href="#"
+                         class="btn btn-sm btn-danger"
+                         th:attr="data-delete-url=@{'/nguoi-dung/delete/' + ${nd.id}}">
+                        Xóa
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(danhSachNguoiDung)}">
+                  <td colspan="8">
+                    <div class="empty-state">
+                      <h3>Chưa có người dùng nào</h3>
+                      <p>Hãy thêm người dùng đầu tiên để bắt đầu quản lý.</p>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div th:replace="~{layout :: deleteModal}"></div>
+<th:block th:replace="~{layout :: scripts}"></th:block>
+
+</body>
+</html>

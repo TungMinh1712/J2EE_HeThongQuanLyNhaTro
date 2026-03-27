@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{layout :: head('Cập nhật hợp đồng')}"></head>
+<body>
+
+<div class="app-shell">
+  <aside th:replace="~{layout :: sidebar('hopdong')}"></aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-heading">
+        <h1>Cập nhật hợp đồng</h1>
+        <p>Chỉnh sửa thông tin hợp đồng thuê phòng</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <form th:action="@{'/hop-dong/update/' + ${hopDong.id}}" th:object="${hopDong}" method="post" class="form">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phong">Phòng</label>
+                <select id="phong" th:field="*{phong.id}" required>
+                  <option value="">-- Chọn phòng --</option>
+                  <option th:each="phong : ${danhSachPhong}"
+                          th:value="${phong.id}"
+                          th:text="${phong.maPhong + ' - ' + phong.tenPhong}">
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="khachThue">Khách thuê</label>
+                <select id="khachThue" th:field="*{khachThue.id}" required>
+                  <option value="">-- Chọn khách thuê --</option>
+                  <option th:each="khach : ${danhSachKhachThue}"
+                          th:value="${khach.id}"
+                          th:text="${khach.hoTen + ' - ' + khach.cccd}">
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ngayBatDau">Ngày bắt đầu</label>
+                <input type="date" id="ngayBatDau" th:field="*{ngayBatDau}" required>
+              </div>
+
+              <div class="form-group">
+                <label for="ngayKetThuc">Ngày kết thúc</label>
+                <input type="date" id="ngayKetThuc" th:field="*{ngayKetThuc}" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="giaThueLucKy">Giá thuê lúc ký</label>
+                <input type="number" step="0.01" id="giaThueLucKy" th:field="*{giaThueLucKy}" required>
+              </div>
+
+              <div class="form-group">
+                <label for="tienCoc">Tiền cọc</label>
+                <input type="number" step="0.01" id="tienCoc" th:field="*{tienCoc}" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="trangThai">Trạng thái</label>
+              <select id="trangThai" th:field="*{trangThai}">
+                <option value="CON_HIEU_LUC">Còn hiệu lực</option>
+                <option value="HET_HAN">Hết hạn</option>
+                <option value="DA_HUY">Đã hủy</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="dieuKhoan">Điều khoản</label>
+              <textarea id="dieuKhoan" th:field="*{dieuKhoan}"></textarea>
+            </div>
+
+            <div class="form-action">
+              <button type="submit" class="btn btn-primary">Cập nhật</button>
+              <a th:href="@{/hop-dong}" class="btn btn-secondary">Quay lại</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<th:block th:replace="~{layout :: scripts}"></th:block>
+
+</body>
+</html>

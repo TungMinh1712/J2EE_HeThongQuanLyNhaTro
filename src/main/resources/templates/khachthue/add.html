@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{layout :: head('Thêm khách thuê')}"></head>
+<body>
+
+<div class="app-shell">
+  <aside th:replace="~{layout :: sidebar('khachthue')}"></aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-heading">
+        <h1>Thêm khách thuê</h1>
+        <p>Tạo mới thông tin khách thuê</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <form th:action="@{/khach-thue/save}" th:object="${khachThue}" method="post" class="form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="hoTen">Họ tên</label>
+                <input type="text" id="hoTen" th:field="*{hoTen}" placeholder="Nhập họ tên" required>
+              </div>
+
+              <div class="form-group">
+                <label for="cccd">CCCD</label>
+                <input type="text" id="cccd" th:field="*{cccd}" placeholder="Nhập số CCCD" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="soDienThoai">Số điện thoại</label>
+                <input type="text" id="soDienThoai" th:field="*{soDienThoai}" placeholder="Nhập số điện thoại">
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" th:field="*{email}" placeholder="Nhập email">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ngaySinh">Ngày sinh</label>
+                <input type="date" id="ngaySinh" th:field="*{ngaySinh}">
+              </div>
+
+              <div class="form-group">
+                <label for="gioiTinh">Giới tính</label>
+                <select id="gioiTinh" th:field="*{gioiTinh}">
+                  <option value="">-- Chọn giới tính --</option>
+                  <option value="Nam">Nam</option>
+                  <option value="Nữ">Nữ</option>
+                  <option value="Khác">Khác</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="diaChi">Địa chỉ</label>
+              <input type="text" id="diaChi" th:field="*{diaChi}" placeholder="Nhập địa chỉ">
+            </div>
+
+            <div class="form-group">
+              <label for="ghiChu">Ghi chú</label>
+              <textarea id="ghiChu" th:field="*{ghiChu}" placeholder="Nhập ghi chú"></textarea>
+            </div>
+
+            <div class="form-action">
+              <button type="submit" class="btn btn-primary">Lưu khách thuê</button>
+              <a th:href="@{/khach-thue}" class="btn btn-secondary">Quay lại</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<th:block th:replace="~{layout :: scripts}"></th:block>
+
+</body>
+</html>

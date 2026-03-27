@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Quản lý nhà trọ</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body>
+
+<aside th:fragment="sidebar(activeMenu)" class="sidebar">
+    <div class="brand">
+        <div class="brand-logo">NT</div>
+        <div class="brand-info">
+            <h2>Nhà trọ</h2>
+            <p>Hệ thống quản lý</p>
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-title">Chức năng</div>
+        <nav class="nav-menu">
+            <a class="nav-link"
+               th:classappend="${activeMenu == 'nguoidung'} ? ' active' : ''"
+               th:href="@{/nguoi-dung}">
+                Người dùng
+            </a>
+
+            <a class="nav-link"
+               th:classappend="${activeMenu == 'phong'} ? ' active' : ''"
+               th:href="@{/phong}">
+                Phòng
+            </a>
+
+            <a class="nav-link"
+               th:classappend="${activeMenu == 'khachthue'} ? ' active' : ''"
+               th:href="@{/khach-thue}">
+                Khách thuê
+            </a>
+
+            <a class="nav-link"
+               th:classappend="${activeMenu == 'hopdong'} ? ' active' : ''"
+               th:href="@{/hop-dong}">
+                Hợp đồng
+            </a>
+
+            <a class="nav-link"
+               th:classappend="${activeMenu == 'diennuoc'} ? ' active' : ''"
+               th:href="@{/chi-so-dien-nuoc}">
+                Điện nước
+            </a>
+
+            <a class="nav-link"
+               th:classappend="${activeMenu == 'hoadon'} ? ' active' : ''"
+               th:href="@{/hoa-don}">
+                Hóa đơn
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<div th:fragment="deleteModal" class="modal" id="deleteModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Xác nhận xóa</h3>
+        </div>
+        <div class="modal-body">
+            <p>Bạn có chắc chắn muốn xóa dữ liệu này không? Hành động này không thể hoàn tác.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-close-modal>Hủy</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
+        </div>
+    </div>
+</div>
+
+<th:block th:fragment="scripts">
+    <script th:src="@{/js/app.js}"></script>
+</th:block>
+
+</body>
+</html>

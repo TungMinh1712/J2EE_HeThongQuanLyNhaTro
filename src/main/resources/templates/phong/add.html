@@ -1,39 +1,85 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Thêm phòng</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{layout :: head('Thêm phòng')}"></head>
 <body>
 
-<h2>Thêm phòng</h2>
+<div class="app-shell">
+    <aside th:replace="~{layout :: sidebar('phong')}"></aside>
 
-<form action="/phong/save" method="post" enctype="multipart/form-data">
+    <main class="main">
+        <div class="topbar">
+            <div class="page-heading">
+                <h1>Thêm phòng</h1>
+                <p>Tạo mới thông tin phòng trọ</p>
+            </div>
+        </div>
 
-    Mã phòng: <input name="maPhong" required><br><br>
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <form th:action="@{/phong/save}" th:object="${phong}" method="post" class="form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="maPhong">Mã phòng</label>
+                                <input type="text" id="maPhong" th:field="*{maPhong}" placeholder="Ví dụ: P101" required>
+                            </div>
 
-    Tên phòng: <input name="tenPhong" required><br><br>
+                            <div class="form-group">
+                                <label for="tenPhong">Tên phòng</label>
+                                <input type="text" id="tenPhong" th:field="*{tenPhong}" placeholder="Ví dụ: Phòng 101" required>
+                            </div>
+                        </div>
 
-    Giá: <input type="number" name="gia" required><br><br>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dienTich">Diện tích (m²)</label>
+                                <input type="number" step="0.01" id="dienTich" th:field="*{dienTich}" placeholder="Nhập diện tích" required>
+                            </div>
 
-    Diện tích: <input type="number" name="dienTich"><br><br>
+                            <div class="form-group">
+                                <label for="giaThue">Giá thuê</label>
+                                <input type="number" step="0.01" id="giaThue" th:field="*{giaThue}" placeholder="Nhập giá thuê" required>
+                            </div>
+                        </div>
 
-    Số lượng: <input type="number" name="soLuong"><br><br>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tienCoc">Tiền cọc</label>
+                                <input type="number" step="0.01" id="tienCoc" th:field="*{tienCoc}" placeholder="Nhập tiền cọc">
+                            </div>
 
-    Trạng thái:
-    <select name="trangThai">
-        <option th:each="t : ${trangThais}"
-                th:value="${t}"
-                th:text="${t}">
-        </option>
-    </select><br><br>
+                            <div class="form-group">
+                                <label for="soNguoiToiDa">Số người tối đa</label>
+                                <input type="number" id="soNguoiToiDa" th:field="*{soNguoiToiDa}" placeholder="Nhập số người tối đa" required>
+                            </div>
+                        </div>
 
-    Ảnh: <input type="file" name="file"><br><br>
+                        <div class="form-group">
+                            <label for="trangThai">Trạng thái</label>
+                            <select id="trangThai" th:field="*{trangThai}">
+                                <option value="CON_TRONG">Còn trống</option>
+                                <option value="DA_THUE">Đã thuê</option>
+                                <option value="DANG_BAO_TRI">Đang bảo trì</option>
+                            </select>
+                        </div>
 
-    <button type="submit">✔ Thêm</button>
-</form>
+                        <div class="form-group">
+                            <label for="moTa">Mô tả</label>
+                            <textarea id="moTa" th:field="*{moTa}" placeholder="Nhập mô tả phòng"></textarea>
+                        </div>
 
-<br>
-<a href="/phong">⬅ Quay lại</a>
+                        <div class="form-action">
+                            <button type="submit" class="btn btn-primary">Lưu phòng</button>
+                            <a th:href="@{/phong}" class="btn btn-secondary">Quay lại</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<th:block th:replace="~{layout :: scripts}"></th:block>
 
 </body>
 </html>

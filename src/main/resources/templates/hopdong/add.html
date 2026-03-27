@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{layout :: head('Thêm hợp đồng')}"></head>
+<body>
+
+<div class="app-shell">
+    <aside th:replace="~{layout :: sidebar('hopdong')}"></aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div class="page-heading">
+                <h1>Thêm hợp đồng</h1>
+                <p>Tạo mới hợp đồng thuê phòng</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <form th:action="@{/hop-dong/save}" th:object="${hopDong}" method="post" class="form">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phongId">Phòng</label>
+                                <select id="phongId" name="phong.id" required>
+                                    <option value="">-- Chọn phòng --</option>
+                                    <option th:each="phong : ${danhSachPhong}"
+                                            th:value="${phong.id}"
+                                            th:text="${phong.maPhong + ' - ' + phong.tenPhong}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="khachThueId">Khách thuê</label>
+                                <select id="khachThueId" name="khachThue.id" required>
+                                    <option value="">-- Chọn khách thuê --</option>
+                                    <option th:each="khach : ${danhSachKhachThue}"
+                                            th:value="${khach.id}"
+                                            th:text="${khach.hoTen + ' - ' + khach.cccd}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ngayBatDau">Ngày bắt đầu</label>
+                                <input type="date" id="ngayBatDau" th:field="*{ngayBatDau}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ngayKetThuc">Ngày kết thúc</label>
+                                <input type="date" id="ngayKetThuc" th:field="*{ngayKetThuc}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="giaThueLucKy">Giá thuê lúc ký</label>
+                                <input type="number"
+                                       step="0.01"
+                                       id="giaThueLucKy"
+                                       th:field="*{giaThueLucKy}"
+                                       placeholder="Tự động lấy theo phòng">
+                                <small class="form-help">Tự động lấy từ giá thuê của phòng, bạn vẫn có thể chỉnh sửa.</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tienCoc">Tiền cọc</label>
+                                <input type="number"
+                                       step="0.01"
+                                       id="tienCoc"
+                                       th:field="*{tienCoc}"
+                                       placeholder="Tự động lấy theo phòng">
+                                <small class="form-help">Tự động lấy từ tiền cọc của phòng, bạn vẫn có thể chỉnh sửa.</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="trangThai">Trạng thái</label>
+                            <select id="trangThai" th:field="*{trangThai}">
+                                <option value="CON_HIEU_LUC">Còn hiệu lực</option>
+                                <option value="HET_HAN">Hết hạn</option>
+                                <option value="DA_HUY">Đã hủy</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dieuKhoan">Điều khoản</label>
+                            <textarea id="dieuKhoan" th:field="*{dieuKhoan}" rows="12">1. Bên thuê có trách nhiệm thanh toán đầy đủ tiền thuê phòng đúng thời hạn mỗi tháng.
+2. Bên thuê phải thanh toán tiền điện, nước và các chi phí phát sinh khác theo quy định.
+3. Bên thuê có trách nhiệm giữ gìn tài sản, vệ sinh chung và không làm hư hỏng cơ sở vật chất của phòng trọ.
+4. Không được tự ý sửa chữa, cải tạo phòng khi chưa có sự đồng ý của bên cho thuê.
+5. Không được gây mất trật tự, ảnh hưởng đến các phòng xung quanh.
+6. Khi chấm dứt hợp đồng, bên thuê phải báo trước ít nhất 30 ngày.
+7. Tiền cọc sẽ được hoàn trả sau khi bên thuê thanh toán đầy đủ mọi chi phí và bàn giao phòng đúng hiện trạng.
+8. Nếu vi phạm điều khoản hợp đồng, bên cho thuê có quyền chấm dứt hợp đồng trước thời hạn.</textarea>
+                        </div>
+
+                        <div class="form-action">
+                            <button type="submit" class="btn btn-primary">Lưu hợp đồng</button>
+                            <a th:href="@{/hop-dong}" class="btn btn-secondary">Quay lại</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<th:block th:replace="~{layout :: scripts}"></th:block>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const phongSelect = document.getElementById("phongId");
+        const giaThueInput = document.getElementById("giaThueLucKy");
+        const tienCocInput = document.getElementById("tienCoc");
+
+        if (!phongSelect) return;
+
+        phongSelect.addEventListener("change", function () {
+            const phongId = this.value;
+
+            if (!phongId) {
+                giaThueInput.value = "";
+                tienCocInput.value = "";
+                return;
+            }
+
+            fetch(`/phong/api/${phongId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Không lấy được thông tin phòng");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    giaThueInput.value = data.giaThue ?? "";
+                    tienCocInput.value = data.tienCoc ?? "";
+                })
+                .catch(error => {
+                    console.error("Lỗi khi lấy thông tin phòng:", error);
+                });
+        });
+    });
+</script>
+
+</body>
+</html>

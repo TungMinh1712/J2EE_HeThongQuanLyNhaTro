@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{layout :: head('Danh sách khách thuê')}"></head>
+<body>
+
+<div class="app-shell">
+  <aside th:replace="~{layout :: sidebar('khachthue')}"></aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-heading">
+        <h1>Danh sách khách thuê</h1>
+        <p>Quản lý thông tin khách thuê trong hệ thống</p>
+      </div>
+      <div class="topbar-actions">
+        <a th:href="@{/khach-thue/add}" class="btn btn-primary">+ Thêm khách thuê</a>
+      </div>
+    </div>
+
+    <div class="container">
+      <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+      <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="table-wrapper">
+            <div class="table-scroll">
+              <table class="table">
+                <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Họ tên</th>
+                  <th>CCCD</th>
+                  <th>Số điện thoại</th>
+                  <th>Email</th>
+                  <th>Ngày sinh</th>
+                  <th>Giới tính</th>
+                  <th>Địa chỉ</th>
+                  <th>Ghi chú</th>
+                  <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="kh : ${danhSachKhachThue}">
+                  <td th:text="${kh.id}"></td>
+                  <td th:text="${kh.hoTen}"></td>
+                  <td th:text="${kh.cccd}"></td>
+                  <td th:text="${kh.soDienThoai}"></td>
+                  <td th:text="${kh.email}"></td>
+                  <td th:text="${kh.ngaySinh}"></td>
+                  <td th:text="${kh.gioiTinh}"></td>
+                  <td th:text="${kh.diaChi}"></td>
+                  <td th:text="${kh.ghiChu}"></td>
+                  <td>
+                    <div class="table-actions">
+                      <a th:href="@{'/khach-thue/edit/' + ${kh.id}}" class="btn btn-sm btn-outline">Sửa</a>
+                      <a href="#"
+                         class="btn btn-sm btn-danger"
+                         th:attr="data-delete-url=@{'/khach-thue/delete/' + ${kh.id}}">
+                        Xóa
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(danhSachKhachThue)}">
+                  <td colspan="10">
+                    <div class="empty-state">
+                      <h3>Chưa có khách thuê nào</h3>
+                      <p>Hãy thêm khách thuê đầu tiên để bắt đầu quản lý.</p>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div th:replace="~{layout :: deleteModal}"></div>
+<th:block th:replace="~{layout :: scripts}"></th:block>
+
+</body>
+</html>

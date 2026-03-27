@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{layout :: head('Thêm chỉ số điện nước')}"></head>
+<body>
+
+<div class="app-shell">
+  <aside th:replace="~{layout :: sidebar('diennuoc')}"></aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-heading">
+        <h1>Thêm chỉ số điện nước</h1>
+        <p>Tạo mới chỉ số điện hoặc nước cho từng phòng</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <form th:action="@{/chi-so-dien-nuoc/save}" th:object="${chiSoDienNuoc}" method="post" class="form">
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phongId">Phòng</label>
+                <select id="phongId" name="phong.id" required>
+                  <option value="">-- Chọn phòng --</option>
+                  <option th:each="phong : ${danhSachPhong}"
+                          th:value="${phong.id}"
+                          th:text="${phong.maPhong + ' - ' + phong.tenPhong}">
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="thangNam">Tháng năm</label>
+                <input type="month" id="thangNam" th:field="*{thangNam}" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="loaiDichVu">Loại dịch vụ</label>
+                <select id="loaiDichVu" th:field="*{loaiDichVu}" required>
+                  <option value="">-- Chọn loại dịch vụ --</option>
+                  <option value="DIEN">Điện</option>
+                  <option value="NUOC">Nước</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="donGia">Đơn giá</label>
+                <input type="number" step="0.01" id="donGia" th:field="*{donGia}" placeholder="Nhập đơn giá" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="chiSoCu">Chỉ số cũ</label>
+                <input type="number" id="chiSoCu" th:field="*{chiSoCu}" placeholder="Nhập chỉ số cũ" required>
+              </div>
+
+              <div class="form-group">
+                <label for="chiSoMoi">Chỉ số mới</label>
+                <input type="number" id="chiSoMoi" th:field="*{chiSoMoi}" placeholder="Nhập chỉ số mới" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="soLuongTieuThu">Số lượng tiêu thụ</label>
+                <input type="number" id="soLuongTieuThu" th:field="*{soLuongTieuThu}" readonly>
+                <small class="form-help">Tự động tính = chỉ số mới - chỉ số cũ</small>
+              </div>
+
+              <div class="form-group">
+                <label for="thanhTien">Thành tiền</label>
+                <input type="number" step="0.01" id="thanhTien" th:field="*{thanhTien}" readonly>
+                <small class="form-help">Tự động tính = số lượng tiêu thụ x đơn giá</small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="ghiChu">Ghi chú</label>
+              <textarea id="ghiChu" th:field="*{ghiChu}" placeholder="Nhập ghi chú"></textarea>
+            </div>
+
+            <div class="form-action">
+              <button type="submit" class="btn btn-primary">Lưu chỉ số</button>
+              <a th:href="@{/chi-so-dien-nuoc}" class="btn btn-secondary">Quay lại</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<th:block th:replace="~{layout :: scripts}"></th:block>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const chiSoCu = document.getElementById("chiSoCu");
+      const chiSoMoi = document.getElementById("chiSoMoi");
+      const donGia = document.getElementById("donGia");
+      const soLuongTieuThu = document.getElementById("soLuongTieuThu");
+      const thanhTien = document.getElementById("thanhTien");
+
+      function tinhToan() {
+          const cu = parseFloat(chiSoCu.value) || 0;
+          const moi = parseFloat(chiSoMoi.value) || 0;
+          const gia = parseFloat(donGia.value) || 0;
+
+          const tieuThu = moi >= cu ? (moi - cu) : 0;
+          soLuongTieuThu.value = tieuThu;
+          thanhTien.value = tieuThu * gia;
+      }
+
+      chiSoCu.addEventListener("input", tinhToan);
+      chiSoMoi.addEventListener("input", tinhToan);
+      donGia.addEventListener("input", tinhToan);
+  });
+</script>
+
+</body>
+</html>
