@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thêm phòng</title>
+</head>
+<body>
+
+<h2>Thêm phòng</h2>
+
+<form action="/phong/save" method="post" enctype="multipart/form-data">
+
+    Mã phòng: <input name="maPhong" required><br><br>
+
+    Tên phòng: <input name="tenPhong" required><br><br>
+
+    Giá: <input type="number" name="gia" required><br><br>
+
+    Diện tích: <input type="number" name="dienTich"><br><br>
+
+    Số lượng: <input type="number" name="soLuong"><br><br>
+
+    Trạng thái:
+    <select name="trangThai">
+        <option th:each="t : ${trangThais}"
+                th:value="${t}"
+                th:text="${t}">
+        </option>
+    </select><br><br>
+
+    Ảnh: <input type="file" name="file"><br><br>
+
+    <button type="submit">✔ Thêm</button>
+</form>
+
+<br>
+<a href="/phong">⬅ Quay lại</a>
+
+</body>
+</html>
