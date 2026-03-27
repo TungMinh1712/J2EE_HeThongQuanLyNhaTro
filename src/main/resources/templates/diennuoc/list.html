@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý điện nước - dịch vụ</title>
+</head>
+<body>
+<h2>Quản lý điện nước - dịch vụ</h2>
+
+<a href="/dien-nuoc/them">Thêm mới</a>
+
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top:10px;">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Phòng</th>
+        <th>Tháng</th>
+        <th>Năm</th>
+        <th>Điện cũ</th>
+        <th>Điện mới</th>
+        <th>Nước cũ</th>
+        <th>Nước mới</th>
+        <th>Tổng điện</th>
+        <th>Tổng nước</th>
+        <th>Tổng DV</th>
+        <th>Tổng tiền</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${dsDienNuoc}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.phong != null ? item.phong.tenPhong : ''}"></td>
+        <td th:text="${item.thang}"></td>
+        <td th:text="${item.nam}"></td>
+        <td th:text="${item.chiSoDienCu}"></td>
+        <td th:text="${item.chiSoDienMoi}"></td>
+        <td th:text="${item.chiSoNuocCu}"></td>
+        <td th:text="${item.chiSoNuocMoi}"></td>
+        <td th:text="${item.tongTienDien}"></td>
+        <td th:text="${item.tongTienNuoc}"></td>
+        <td th:text="${item.tongTienDichVu}"></td>
+        <td th:text="${item.tongTien}"></td>
+        <td>
+            <a th:href="@{/dien-nuoc/sua/{id}(id=${item.id})}">Sửa</a>
+            |
+            <a th:href="@{/dien-nuoc/xoa/{id}(id=${item.id})}"
+               onclick="return confirm('Bạn có chắc muốn xóa không?')">Xóa</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

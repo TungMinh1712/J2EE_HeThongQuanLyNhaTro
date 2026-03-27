@@ -1,20 +1,31 @@
 package com.example.DACK_QuanLyNhaTro.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Entity
 @Table(name = "phong")
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Phong {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "ten_phong")
+    private String tenPhong;
+
+    public Phong() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTenPhong() {
+        return tenPhong;
+    }
+
+    public void setTenPhong(String tenPhong) {
+        this.tenPhong = tenPhong;
     private Integer id;
 
     private String maPhong;
