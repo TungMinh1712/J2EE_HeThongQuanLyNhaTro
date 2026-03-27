@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách hợp đồng</title>
+</head>
+<body>
+    <h1>Danh sách hợp đồng</h1>
+    <table>
+        <tr>
+            <th>Mã hợp đồng</th>
+            <th>Khách thuê</th>
+            <th>Phòng</th>
+            <th>Ngày bắt đầu</th>
+            <th>Ngày kết thúc</th>
+            <th>Giá thuê</th>
+            <th>Trang thái</th>
+            <th>Hành động</th>
+        </tr>
+        <tr th:each="hopDong : ${dsHopDong}">
+            <td th:text="${hopDong.maHopDong}"></td>
+            <td th:text="${hopDong.khachThue.tenKhachThue}"></td>
+            <td th:text="${hopDong.phong.tenPhong}"></td>
+            <td th:text="${hopDong.ngayBatDau}"></td>
+            <td th:text="${hopDong.ngayKetThuc}"></td>
+            <td th:text="${hopDong.giaThue}"></td>
+            <td th:text="${hopDong.trangThai}"></td>
+            <td>
+                <a th:href="@{/hop-dong/sua/{id}(id=${hopDong.id})}">Sửa</a> |
+                <a th:href="@{/hop-dong/xoa/{id}(id=${hopDong.id})}">Xóa</a>
+            </td>
+        </tr>
+    </table>
+    <a href="/hop-dong/them">Thêm hợp đồng mới</a>
+</body>
+</html>
